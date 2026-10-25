@@ -2,79 +2,115 @@
 
 ## 1. Project Overview
 
-This project documents an accessibility and architecture audit of the National Portal of India.
+This project documents an accessibility baseline audit of the National Portal of India and provides a small dashboard to display the recorded findings.
 
-- **Website:** https://www.india.gov.in/
-- **Audit Tool:** Google Chrome Lighthouse
-- **Audit Areas:** Accessibility, Performance, Best Practices, and SEO
+- **Website audited:** https://www.india.gov.in/
+- **Audit tool:** Google Chrome Lighthouse
+- **Testing approach:** Lighthouse and keyboard-only navigation
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** Python and Flask
+- **Testing:** Python `unittest`
 
-The project records accessibility findings, supporting screenshots, and a proposed repository architecture for future development.
-
-## 2. Architecture Overview
-
-This repository follows a monorepo-style structure. Frontend code, backend code, documentation, and tests are organized in separate directories.
+## 2. Repository Architecture
 
 ```text
-task-1/
+Task-1/
 ├── client/
+│   ├── index.html
+│   ├── style.css
+│   └── app.js
 ├── server/
+│   └── app.py
 ├── docs/
 │   ├── accessibility-audit.md
 │   └── screenshots/
-│       ├── lighthouse-overview/
-│       └── individual-issues/
 ├── tests/
+│   └── test_app.py
+├── .gitignore
+├── requirements.txt
 └── README.md
 ```
 
 ## 3. Folder Responsibilities
 
-- **client/** — Contains frontend code, user interface components, and client-side assets.
-- **server/** — Contains backend application logic and API-related code.
-- **docs/** — Stores the accessibility audit report and supporting screenshots.
-- **tests/** — Stores automated tests and test-related documentation.
-- **README.md** — Explains the project, repository structure, and setup instructions.
+- **client/** — Displays audit findings using HTML, CSS and JavaScript.
+- **server/** — Provides a Flask API that returns structured finding data.
+- **docs/** — Contains the audit report and screenshot evidence.
+- **tests/** — Contains automated tests for the API.
+- **requirements.txt** — Lists Python dependencies.
+- **.gitignore** — Excludes virtual environments and temporary files.
 
 ## 4. Architecture Boundaries
 
-The client is responsible for presenting information and collecting user interactions. The server is responsible for processing requests and handling application logic. The client and server communicate through defined API endpoints when implemented.
+The frontend requests audit findings from the backend through an HTTP API. The Flask server returns JSON data, and the frontend renders each finding as a dashboard card.
 
-Documentation and tests remain separate from application source code to improve maintainability and organization.
+The audit documentation and screenshots are maintained separately from the application source code.
 
 ## 5. Local Setup
 
 ### Prerequisites
 
+- Python 3
 - Git
 - Visual Studio Code
 - A web browser
-- The relevant runtime and dependencies when application code is added
+- VS Code Live Server extension
 
-### Setup Steps
+### Install dependencies
 
-1. Clone the repository from GitHub.
-2. Open the project folder in Visual Studio Code.
-3. Review the documentation in `docs/`.
-4. Install the dependencies required by the client and server once their technology stacks are configured.
-5. Run the relevant tests after test commands have been added.
+```bash
+python -m venv .venv
+```
 
-**Current status:** This repository is an initial architecture skeleton and audit documentation project. Client and server implementations, dependency installation commands, and test commands will be added when the technology stack is defined.
+Activate the environment in Git Bash on Windows:
+
+```bash
+source .venv/Scripts/activate
+```
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### Run the backend
+
+From the repository root:
+
+```bash
+python server/app.py
+```
+
+The API runs locally at `http://127.0.0.1:5000`.
+
+- `GET /` — Returns an API health message.
+- `GET /api/findings` — Returns the five recorded audit findings as JSON.
+
+### Run the frontend
+
+Open `client/index.html` using VS Code Live Server while the backend is running.
+
+### Run automated tests
+
+From the repository root:
+
+```bash
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+The current test suite contains three tests covering the health route, findings endpoint and required finding fields.
 
 ## 6. First Vertical Feature Slice
 
-A proposed first feature is an accessibility findings viewer.
+The accessibility findings viewer is implemented:
 
-1. The client displays the list of audit findings.
-2. The client requests findings from a backend API.
-3. The server returns structured finding data, including the issue title, description, priority, and remediation.
-4. The client renders the findings for the user.
-5. Tests verify the API response and the displayed information.
+1. The frontend requests findings from the backend.
+2. The backend returns structured JSON data.
+3. The frontend renders the findings as dashboard cards.
+4. Automated tests verify the API responses and required fields.
 
-This feature is a proposed implementation and has not yet been developed.
-
-## 7. Audit Results
-
-The initial Lighthouse scores recorded during the audit were:
+## 7. Lighthouse Results
 
 | Category | Score |
 |---|---:|
@@ -83,14 +119,20 @@ The initial Lighthouse scores recorded during the audit were:
 | Best Practices | 88 |
 | SEO | 100 |
 
-Detailed findings and screenshot evidence are available in `docs/accessibility-audit.md` and `docs/screenshots/`.
+These are the scores recorded during the initial audit.
 
-## 8. Project Status
+## 8. Accessibility Findings
 
-- [x] Initial accessibility findings documented
+Five findings and their recommended remediations are documented in `docs/accessibility-audit.md`. Supporting screenshots are available under `docs/screenshots/`.
+
+The findings cover ARIA list structure, colour contrast, HTML list structure, duplicate IDs and links with identical text leading to different destinations.
+
+## 9. Project Status
+
+- [x] Accessibility findings documented
 - [x] Screenshot evidence collected
-- [x] Initial repository architecture planned
-- [ ] Repository structure verified
-- [ ] Architecture documentation reviewed
-- [ ] Client and server implementation
-- [ ] Tests configured
+- [x] Repository architecture established
+- [x] Frontend dashboard implemented
+- [x] Flask API implemented
+- [x] Automated tests implemented and passing (3/3)
+- [x] Changes pushed to GitHub
